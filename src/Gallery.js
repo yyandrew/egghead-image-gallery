@@ -16,6 +16,24 @@ class Gallery extends React.Component {
       selectedImage: flickrImages[0]
     }
   }
+  componentDidMount() {
+    const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
+    const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=${API_KEY}&format=json&nojsoncallback=1&per_page=5`;
+    fetch(API_ENDPOINT).then((response) => {
+      return response.json().then((json) => {
+        const images = json.photos.photo.map(({farm, server, id, secret}) => {
+          return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
+        });
+
+        console.log(images);
+        this.setState({images, selectedImage: images[0]});
+      })
+    })
+  }
+  handleThumbClick(selectedImage) {
+    console.log(selectedImage)
+    this.setState({selectedImage});
+  }
   render() {
     const {images, selectedImage} = this.state;
 
@@ -23,12 +41,12 @@ class Gallery extends React.Component {
       <div className="image-gallery">
         <div className="gallery-image">
           <div>
-            <img src="{selectedImage}" />
+            <img src={selectedImage} />
           </div>
         </div>
         <div>
           {images.map((image, index) => (
-            <div key={index}>
+            <div key={index} onClick={this.handleThumbClick.bind(this, image)}>
                 <img src={image} />
             </div>
           ))}
