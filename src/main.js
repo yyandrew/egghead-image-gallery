@@ -8,11 +8,11 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from './reducer';
 import { Provider } from 'react-redux';
 
-import { sayHello, loadImages } from './saga';
+import { sayHello, loadImagesSaga } from './saga';
 
 const store = createStore(
   reducer,
-  applyMiddleware(createSagaMiddleware(sayHello, loadImages))
+  applyMiddleware(createSagaMiddleware(sayHello, loadImagesSaga))
 );
 ReactDOM.render(
   <Provider store={store}>
