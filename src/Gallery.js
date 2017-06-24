@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
-
-const flickrImages = [
-  "https://farm2.staticflickr.com/1553/25266806624_fdd55cecbc.jpg",
-  "https://farm2.staticflickr.com/1581/25283151224_50f8da511e.jpg",
-  "https://farm2.staticflickr.com/1653/25265109363_f204ea7b54.jpg",
-  "https://farm2.staticflickr.com/1571/25911417225_a74c8041b0.jpg",
-  "https://farm2.staticflickr.com/1450/25888412766_44745cbca3.jpg"
-]
+import { connect } from 'react-redux';
+import * as GalleryActions from './actions.js';
+import { bindActionCreators } from 'redux';
 
 class Gallery extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      images: flickrImages,
-      selectedImage: flickrImages[0]
-    }
+    console.log(props);
   }
   componentDidMount() {
     const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
@@ -25,7 +17,6 @@ class Gallery extends React.Component {
           return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
         });
 
-        console.log(images);
         this.setState({images, selectedImage: images[0]});
       })
     })
@@ -35,7 +26,7 @@ class Gallery extends React.Component {
     this.setState({selectedImage});
   }
   render() {
-    const {images, selectedImage} = this.state;
+    const {images, selectedImage, selectImage} = this.props;
 
     return (
       <div className="image-gallery">
@@ -46,7 +37,7 @@ class Gallery extends React.Component {
         </div>
         <div>
           {images.map((image, index) => (
-            <div key={index} onClick={this.handleThumbClick.bind(this, image)}>
+            <div key={index} onClick={() => selectImage(image)}>
                 <img src={image} />
             </div>
           ))}
@@ -55,5 +46,14 @@ class Gallery extends React.Component {
     );
   }
 }
+function mapStateToProps(state) {
+  return {
+    images: state.images,
+    selectedImage: state.selectedImage
+  }
+}
 
-export default Gallery;
+function mapActionCreatorsToProps(dispatch) {
+  return bindActionCreators(GalleryActions, dispatch)
+}
+export default connect(mapStateToProps, mapActionCreatorsToProps)(Gallery);
