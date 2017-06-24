@@ -7,6 +7,9 @@ import { createStore } from 'redux';
 import reducer from './reducer';
 import { Provider } from 'react-redux';
 
+import { sayHello } from './saga';
+sayHello().next()
+
 const store = createStore(reducer);
 ReactDOM.render(
   <Provider store={store}>
